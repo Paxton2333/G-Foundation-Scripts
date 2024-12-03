@@ -37,9 +37,28 @@ local Window = Rayfield:CreateWindow({
 local MainTab = Window:CreateTab("Home", nil) -- Title, Image
 local MainSection = Tab:CreateSection("Main")
 
-Rayfield:Notify({
-   Title = "Notification",
-   Content = "Successfully Connect to G Foundation Scripting Network",
-   Duration = 6.5,
-   Image = 4483362458,
+local Button = Tab:CreateButton({
+   Name = "Instakill (not 100% but also not 0%)",
+   Callback = function()
+  getgenv().AutoOneShotting = true
+ 
+task.spawn(function()
+    local connection
+    connection = game:GetService("RunService").RenderStepped:Connect(function()
+        if getgenv().AutoOneShotting == true then
+            pcall(function()
+                for _,k in ipairs(workspace.Living:GetChildren()) do
+                    if k:IsA("Model") and k:FindFirstChild("Head") and k.Head:IsA("Part") and k.Head.Name == "Head" and k.Head ~= game.Players.LocalPlayer.Character.Head then
+                        if (k.Head.Position - game.Players.LocalPlayer.Character.Head.Position).magnitude <= 75 then
+                            if k:FindFirstChildOfClass("Humanoid").Health ~= k:FindFirstChildOfClass("Humanoid").MaxHealth then k:FindFirstChildOfClass("Humanoid").Health = 0;end
+                        end
+                    end
+                end
+            end)
+        else
+            connection:Disconnect();
+        end
+    end)
+end)
+   end,
 })
